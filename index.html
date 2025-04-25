@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Leitura Labial - Desafio</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px auto;
+      max-width: 600px;
+      padding: 20px;
+      text-align: center;
+    }
+    video {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #resultado {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Desafio de Leitura Labial</h1>
+  <p>Assista ao vídeo (sem som) e tente entender o que está sendo dito.</p>
+
+  <video id="video" src="video1.mp4" controls muted></video>
+
+  <input type="text" id="resposta" placeholder="Digite aqui o que foi dito..." />
+  <button onclick="verificar()">Verificar</button>
+
+  <div id="resultado"></div>
+
+  <script>
+    const transcricaoCorreta = "oi tudo bem com você";
+
+    function verificar() {
+      const respostaUsuario = document.getElementById("resposta").value.trim().toLowerCase();
+      const resultado = document.getElementById("resultado");
+
+      if (respostaUsuario === transcricaoCorreta) {
+        resultado.innerHTML = "Parabéns! Você acertou!";
+        resultado.style.color = "green";
+      } else {
+        resultado.innerHTML = `Resposta correta: "${transcricaoCorreta}".<br>
+        Você digitou: "${respostaUsuario}".`;
+        resultado.style.color = "red";
+      }
+    }
+  </script>
+
+</body>
+</html>
