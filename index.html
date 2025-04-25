@@ -1,26 +1,25 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Leitura Labial - Desafio</title>
+  <title>Desafio de Leitura Labial</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 40px auto;
-      max-width: 600px;
+      max-width: 700px;
       padding: 20px;
       text-align: center;
     }
     video {
       width: 100%;
-      border-radius: 10px;
       margin-bottom: 20px;
     }
-    input {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
+    .nivel {
+      display: none;
+    }
+    .visivel {
+      display: block;
     }
     button {
       margin-top: 10px;
@@ -28,38 +27,95 @@
       font-size: 16px;
       cursor: pointer;
     }
-    #resultado {
-      margin-top: 20px;
-      font-weight: bold;
+    input, select {
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    #mensagemFinal {
+      font-size: 18px;
+      margin-top: 30px;
+      display: none;
     }
   </style>
 </head>
 <body>
 
   <h1>Desafio de Leitura Labial</h1>
-  <p>Assista ao vídeo (sem som) e tente entender o que está sendo dito.</p>
+  <div id="conteudo"></div>
 
-  <video id="video" src="video1.mp4" controls muted></video>
+  <div id="nivel1" class="nivel visivel">
+    <h2>Nível 1 - Escolha a frase correta</h2>
+    <video src="video1.mp4" controls muted></video>
+    <select id="resposta1">
+      <option value="">Escolha a opção</option>
+      <option value="errado">Calma aí, festejou muito final de semana?</option>
+      <option value="certo">E aí, descansou no final de semana?</option>
+    </select>
+    <button onclick="verificarNivel(1)">Verificar</button>
+  </div>
 
-  <input type="text" id="resposta" placeholder="Digite aqui o que foi dito..." />
-  <button onclick="verificar()">Verificar</button>
+  <div id="nivel2" class="nivel">
+    <h2>Nível 2 - Complete a frase</h2>
+    <video src="video2.mp4" controls muted></video>
+    <p><strong>Para semana que vem,</strong></p>
+    <input type="text" id="resposta2" placeholder="Complete a frase">
+    <button onclick="verificarNivel(2)">Verificar</button>
+  </div>
 
-  <div id="resultado"></div>
+  <div id="nivel3" class="nivel">
+    <h2>Nível 3 - Digite a frase (Dica: _ _ _)</h2>
+    <video src="video3.mp4" controls muted></video>
+    <p><strong>Dica:</strong> _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</p>
+    <input type="text" id="resposta3" placeholder="Digite a frase">
+    <button onclick="verificarNivel(3)">Verificar</button>
+  </div>
+
+  <div id="nivel4" class="nivel">
+    <h2>Nível 4 - Sem dica</h2>
+    <video src="video4.mp4" controls muted></video>
+    <input type="text" id="resposta4" placeholder="Digite a frase">
+    <button onclick="verificarNivel(4)">Verificar</button>
+  </div>
+
+  <div id="nivel5" class="nivel">
+    <h2>Nível 5 - Sem dica</h2>
+    <video src="video5.mp4" controls muted></video>
+    <input type="text" id="resposta5" placeholder="Digite a frase">
+    <button onclick="verificarNivel(5)">Verificar</button>
+  </div>
+
+  <div id="mensagemFinal">
+    <h2>Parabéns!</h2>
+    <p>Você completou todos os níveis.</p>
+    <p>Sabia que muitas pessoas com deficiência auditiva enfrentam dificuldades na permanência no ensino superior?</p>
+    <p>Falta de acessibilidade, legendas em vídeos, interpretes de Libras e apoio institucional são algumas das barreiras.</p>
+    <p><a href="https://www.vlibras.gov.br/" target="_blank">Clique aqui para saber como ajudar</a></p>
+  </div>
 
   <script>
-    const transcricaoCorreta = "oi tudo bem com você";
+    const respostasCertas = {
+      1: 'certo',
+      2: 'temos um seminário',
+      3: 'fui mal na prova de psicologia educacional',
+      4: 'essa é a frase do vídeo 4',
+      5: 'essa é a frase do vídeo 5'
+    };
 
-    function verificar() {
-      const respostaUsuario = document.getElementById("resposta").value.trim().toLowerCase();
-      const resultado = document.getElementById("resultado");
-
-      if (respostaUsuario === transcricaoCorreta) {
-        resultado.innerHTML = "Parabéns! Você acertou!";
-        resultado.style.color = "green";
+    function verificarNivel(nivel) {
+      const input = document.getElementById('resposta' + nivel);
+      const valor = input.value.trim().toLowerCase();
+      if (valor === respostasCertas[nivel]) {
+        document.getElementById('nivel' + nivel).classList.remove('visivel');
+        const proximoNivel = document.getElementById('nivel' + (nivel + 1));
+        if (proximoNivel) {
+          proximoNivel.classList.add('visivel');
+        } else {
+          document.getElementById('mensagemFinal').style.display = 'block';
+        }
       } else {
-        resultado.innerHTML = `Resposta correta: "${transcricaoCorreta}".<br>
-        Você digitou: "${respostaUsuario}".`;
-        resultado.style.color = "red";
+        alert('Resposta incorreta. Tente novamente.');
       }
     }
   </script>
