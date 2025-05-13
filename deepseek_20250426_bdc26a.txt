@@ -1,6 +1,0 @@
-index.html          (Página inicial)
-niveis.html         (Página com os 5 níveis)
-sobre.html          (Explicação sobre dificuldades no ensino superior)
-ajuda.html          (Como ajudar)
-styles.css          (Estilos CSS)
-/ videos            (Pasta para os vídeos)
