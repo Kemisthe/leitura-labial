@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desafio de Leitura Labial</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #fff7f0;
+      color: #333;
+    }
+    header {
+      background-color: #ffe0d1;
+      text-align: center;
+      padding: 2rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+    .level {
+      padding: 3rem 1rem;
+      text-align: center;
+      display: none;
+    }
+    .level.active {
+      display: block;
+    }
+    .level:nth-child(odd) {
+      background-color: #fff7f0;
+    }
+    .level:nth-child(even) {
+      background-color: #f0f7f4;
+    }
+    video {
+      width: 90%;
+      max-width: 500px;
+      margin: 1rem 0;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .options button, .submit-btn, .next-btn, .help-btn, .repeat-btn {
+      background-color: #ff8a5b;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      margin: 0.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+    .options button:hover, .submit-btn:hover, .next-btn:hover, .help-btn:hover, .repeat-btn:hover {
+      background-color: #e06c3d;
+      transform: translateY(-2px);
+    }
+    input[type="text"] {
+      padding: 0.8rem;
+      font-size: 1rem;
+      width: 80%;
+      max-width: 400px;
+      margin: 1rem 0;
+      border-radius: 8px;
+      border: 2px solid #ccc;
+      transition: border-color 0.3s;
+    }
+    input[type="text"]:focus {
+      border-color: #ff8a5b;
+      outline: none;
+    }
+    .result {
+      font-weight: bold;
+      margin-top: 1rem;
+      min-height: 24px;
+    }
+    .final-page {
+      padding: 4rem 2rem;
+      text-align: center;
+      background-color: #d8f3dc;
+      display: none;
+    }
+    .final-page.active {
+      display: block;
+    }
+    .progress-bar {
+      width: 100%;
+      background-color: #e0e0e0;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+    .progress {
+      height: 20px;
+      border-radius: 8px;
+      background-color: #4caf50;
+      width: 0%;
+      transition: width 0.5s;
+    }
+    .score-display {
+      font-size: 1.2rem;
+      margin: 1rem 0;
+    }
+    .video-container {
+      position: relative;
+      display: inline-block;
+    }
+    .repeat-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background-color: rgba(0,0,0,0.7);
+    }
+    .hint {
+      font-style: italic;
+      color: #666;
+      margin: 0.5rem 0;
+    }
+    .correct-answer {
+      color: #4caf50;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Desafio de Leitura Labial</h1>
+  <p>Tente entender o que está sendo dito apenas pela leitura dos lábios!</p>
+  <div class="progress-bar">
+    <div class="progress" id="progress"></div>
+  </div>
+  <div class="score-display" id="score">Pontuação: 0/0</div>
+</header>
+
+<main>
+
+<section class="level active" id="level1">
+  <h2>Nível 1 - Escolha a resposta correta</h2>
+  <div class="video-container">
+    <video src="video1.mp4" controls muted></video>
+    <button class="repeat-btn" onclick="repeatVideo(1)">🔁 Repetir</button>
+  </div>
+  <p class="hint">Dica: Cumprimento comum entre colegas</p>
+  <div class="options">
+    <button onclick="checkAnswer(1, '2')">Calma aí, festejou muito final de semana?</button>
+    <button onclick="checkAnswer(1, '1')">E aí, descansou no final de semana?</button>
+  </div>
+  <div class="result" id="result1"></div>
+  <button class="next-btn" onclick="nextLevel(1)" style="display:none;">Próximo Nível</button>
+</section>
+
+<section class="level" id="level2">
+  <h2>Nível 2 - Complete a frase</h2>
+  <div class="video-container">
+    <video src="video2.mp4" controls muted></video>
+    <button class="repeat-btn" onclick="repeatVideo(2)">🔁 Repetir</button>
+  </div>
+  <p>"Para semana que vem, ..."</p>
+  <p class="hint">Dica: Atividade acadêmica</p>
+  <input type="text" id="input2" placeholder="Digite aqui...">
+  <button class="submit-btn" onclick="checkText(2, 'temos um seminário')">Enviar</button>
+  <div class="result" id="result2"></div>
+  <button class="next-btn" onclick="nextLevel(2)" style="display:none;">Próximo Nível</button>
+</section>
+
+<section class="level" id="level3">
+  <h2>Nível 3 - Preencha a frase (quantidade de letras)</h2>
+  <div class="video-container">
+    <video src="video3.mp4" controls muted></video>
+    <button class="repeat-btn" onclick="repeatVideo(3)">🔁 Repetir</button>
+  </div>
+  <p>Preencha a frase (35 letras)</p>
+  <p class="hint">Dica: Resultado acadêmico em uma disciplina</p>
+  <input type="text" id="input3" placeholder="Digite aqui...">
+  <button class="submit-btn" onclick="checkText(3, 'fui mal na prova de psicologia educacional')">Enviar</button>
+  <div class="result" id="result3"></div>
+  <button class="next-btn" onclick="nextLevel(3)" style="display:none;">Próximo Nível</button>
+</section>
+
+<section class="level" id="level4">
+  <h2>Nível 4 - Interprete sem ajuda</h2>
+  <div class="video-container">
+    <video src="video4.mp4" controls muted></video>
+    <button class="repeat-btn" onclick="repeatVideo(4)">🔁 Repetir</button>
+  </div>
+  <input type="text" id="input4" placeholder="Digite a frase...">
+  <button class="submit-btn" onclick="checkText(4, 'precisamos falar sobre a inclusão de alunos surdos')">Enviar</button>
+  <div class="result" id="result4"></div>
+  <button class="next-btn" onclick="nextLevel(4)" style="display:none;">Próximo Nível</button>
+</section>
+
+<section class="level" id="level5">
+  <h2>Nível 5 - Interprete sem ajuda</h2>
+  <div class="video-container">
+    <video src="video5.mp4" controls muted></video>
+    <button class="repeat-btn" onclick="repeatVideo(5)">🔁 Repetir</button>
+  </div>
+  <input type="text" id="input5" placeholder="Digite a frase...">
+  <button class="submit-btn" onclick="checkText(5, 'a universidade precisa de mais intérpretes de libras')">Enviar</button>
+  <div class="result" id="result5"></div>
+  <button class="next-btn" onclick="showFinalPage()" style="display:none;">Ver Resultado Final</button>
+</section>
+
+<section class="final-page">
+  <h2>Desafios de Permanência no Ensino Superior</h2>
+  <p>Para estudantes surdos, a comunicação e o acesso pleno ao conteúdo acadêmico são barreiras enormes. A inclusão requer adaptações, respeito e apoio contínuo.</p>
+  <div id="final-score" class="score-display"></div>
+  <button class="help-btn" onclick="window.open('https://vlibras.gov.br', '_blank')">Saiba como ajudar</button>
+  <button class="help-btn" onclick="restartGame()" style="background-color: #4caf50;">Jogar Novamente</button>
+</section>
+
+</main>
+
+<script>
+  let currentLevel = 1;
+  let score = 0;
+  let totalQuestions = 5;
+  
+  // Inicializa o primeiro nível
+  document.querySelector('.level').classList.add('active');
+  updateProgress();
+  
+  function repeatVideo(level) {
+    const video = document.querySelector(`#level${level} video`);
+    video.currentTime = 0;
+    video.play();
+  }
+  
+  function checkAnswer(level, correctOption) {
+    const result = document.getElementById(`result${level}`);
+    const nextBtn = document.querySelector(`#level${level} .next-btn`);
+    
+    if (event.target.getAttribute('onclick').includes(correctOption)) {
+      result.innerHTML = "✅ Resposta correta!";
+      result.style.color = "green";
+      score++;
+    } else {
+      result.innerHTML = "❌ Resposta incorreta. <span class='correct-answer'>Resposta correta: " + 
+        (correctOption === '1' ? "E aí, descansou no final de semana?" : "Calma aí, festejou muito final de semana?") + "</span>";
+      result.style.color = "red";
+    }
+    
+    updateScore();
+    nextBtn.style.display = "inline-block";
+    document.querySelectorAll(`#level${level} .options button`).forEach(btn => {
+      btn.disabled = true;
+    });
+  }
+  
+  function checkText(level, correctText) {
+    const input = document.getElementById(`input${level}`);
+    const result = document.getElementById(`result${level}`);
+    const nextBtn = document.querySelector(`#level${level} .next-btn`);
+    const userAnswer = input.value.trim().toLowerCase();
+    
+    if (userAnswer === correctText.trim().toLowerCase()) {
+      result.innerHTML = "✅ Resposta correta!";
+      result.style.color = "green";
+      score++;
+    } else {
+      result.innerHTML = `❌ Resposta incorreta. <span class='correct-answer'>Resposta correta: ${correctText}</span>`;
+      result.style.color = "red";
+    }
+    
+    updateScore();
+    nextBtn.style.display = "inline-block";
+    input.disabled = true;
+    document.querySelector(`#level${level} .submit-btn`).disabled = true;
+  }
+  
+  function nextLevel(current) {
+    document.getElementById(`level${current}`).classList.remove('active');
+    currentLevel = current + 1;
+    
+    if (currentLevel <= totalQuestions) {
+      document.getElementById(`level${currentLevel}`).classList.add('active');
+    }
+    
+    updateProgress();
+    window.scrollTo(0, 0);
+  }
+  
+  function showFinalPage() {
+    document.getElementById(`level${totalQuestions}`).classList.remove('active');
+    document.querySelector('.final-page').classList.add('active');
+    document.getElementById('final-score').innerHTML = `Você acertou ${score} de ${totalQuestions} questões!`;
+    window.scrollTo(0, 0);
+  }
+  
+  function restartGame() {
+    currentLevel = 1;
+    score = 0;
+    
+    // Reset all levels
+    document.querySelectorAll('.level').forEach(level => {
+      level.classList.remove('active');
+      
+      // Reset inputs and buttons
+      const inputs = level.querySelectorAll('input');
+      inputs.forEach(input => {
+        input.value = '';
+        input.disabled = false;
+      });
+      
+      const buttons = level.querySelectorAll('button:not(.repeat-btn)');
+      buttons.forEach(button => {
+        button.disabled = false;
+        if (button.classList.contains('next-btn')) {
+          button.style.display = 'none';
+        }
+      });
+      
+      // Reset results
+      const result = level.querySelector('.result');
+      if (result) {
+        result.innerHTML = '';
+        result.style.color = '';
+      }
+    });
+    
+    // Reset videos
+    document.querySelectorAll('video').forEach(video => {
+      video.pause();
+      video.currentTime = 0;
+    });
+    
+    // Show first level
+    document.getElementById('level1').classList.add('active');
+    document.querySelector('.final-page').classList.remove('active');
+    updateScore();
+    updateProgress();
+  }
+  
+  function updateScore() {
+    document.getElementById('score').innerHTML = `Pontuação: ${score}/${totalQuestions}`;
+  }
+  
+  function updateProgress() {
+    const progress = (currentLevel - 1) / totalQuestions * 100;
+    document.getElementById('progress').style.width = `${progress}%`;
+  }
+</script>
+
+</body>
+</html>
